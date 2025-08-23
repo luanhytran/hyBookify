@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-
-namespace hyBookify.Domain.Apartments
+﻿namespace hyBookify.Domain.Apartments
 {
     public record Currency
     {
