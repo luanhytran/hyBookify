@@ -1,4 +1,4 @@
-﻿namespace hyBookify.Domain.Apartments
+﻿namespace hyBookify.Domain.Shared
 {
     public record Currency
     {
