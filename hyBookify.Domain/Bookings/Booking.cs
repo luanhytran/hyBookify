@@ -5,7 +5,7 @@ using hyBookify.Domain.Shared;
 
 namespace hyBookify.Domain.Bookings;
 
-public class Booking : Entity
+public sealed class Booking : Entity
 {
     private Booking(
         Guid id,
@@ -30,7 +30,7 @@ public class Booking : Entity
         Status = status;
         CreatedOnUtc = createdOnUtc;
     }
-
+    
     public Guid ApartmentId { get; private set; }
 
     public Guid UserId { get; private set; }
