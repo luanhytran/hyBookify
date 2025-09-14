@@ -1,4 +1,5 @@
-﻿using hyBookify.Application.Abstractions.Behaviors;
+﻿using FluentValidation;
+using hyBookify.Application.Abstractions.Behaviors;
 using hyBookify.Domain.Bookings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,11 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
             
             configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
+
+            configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
+        
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         services.AddTransient<PricingService>();
 
