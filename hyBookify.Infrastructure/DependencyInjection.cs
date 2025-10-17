@@ -1,10 +1,13 @@
+using Dapper;
 using hyBookify.Application.Abstractions.Clock;
+using hyBookify.Application.Abstractions.Data;
 using hyBookify.Application.Abstractions.Email;
 using hyBookify.Domain.Abstractions;
 using hyBookify.Domain.Apartments;
 using hyBookify.Domain.Bookings;
 using hyBookify.Domain.Users;
 using hyBookify.Infrastructure.Clock;
+using hyBookify.Infrastructure.Data;
 using hyBookify.Infrastructure.Email;
 using hyBookify.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +40,11 @@ public static class DependencyInjection
         services.AddScoped<IBookingRepository, BookingRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+
+        services.AddSingleton<ISqlConnectionFactory>(_ =>
+            new SqlConnectionFactory(connectionString));
+
+        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
         return services;
     }
