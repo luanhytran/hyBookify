@@ -1,25 +1,23 @@
-﻿services:
+﻿version: '3.4'
+
+services:
   hybookify.api:
-    image: ${DOCKER_REGISTRY-}hybookify
+    image: ${DOCKER_REGISTRY-}hybookifyapi
     container_name: hyBookify.Api
     build:
       context: .
       dockerfile: hyBookify.Api/Dockerfile
-    ports:
-      - 5002:5000
     depends_on:
       - hybookify-db
-    restart: unless-stopped
 
   hybookify-db:
     image: postgres:latest
-    container_name: hybBokify.Db
+    container_name: hyBookify.Db
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-hybookify}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=hybookify
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
       - 5433:5432
-    restart: unless-stopped

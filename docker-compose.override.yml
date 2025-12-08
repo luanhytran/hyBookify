@@ -1,3 +1,5 @@
+version: '3.4'
+
 services:
   hybookify.api:
     environment:
@@ -5,3 +7,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=5000
     ports:
       - 5002:5000
+      - 5001:5001
+    volumes:
+      - ${APPDATA:-~}/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA:-~}/.aspnet/https:/root/.aspnet/https:ro
