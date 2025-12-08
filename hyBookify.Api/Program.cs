@@ -1,3 +1,4 @@
+using hyBookify.Api.Extensions;
 using hyBookify.Application;
 using hyBookify.Infrastructure;
 
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     
     app.ApplyMigrations();
+    
+    app.SeedData();
 }
 
 app.UseHttpsRedirection();
