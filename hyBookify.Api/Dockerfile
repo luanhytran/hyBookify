@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["hyBookify.Api/hyBookify.Api.csproj", "hyBookify.Api/"]
+COPY ["hyBookify.Application/hyBookify.Application.csproj", "hyBookify.Application/"]
+COPY ["hyBookify.Domain/hyBookify.Domain.csproj", "hyBookify.Domain/"]
+COPY ["hyBookify.Infrastructure/hyBookify.Infrastructure.csproj", "hyBookify.Infrastructure/"]
 RUN dotnet restore "./hyBookify.Api/hyBookify.Api.csproj"
 COPY . .
 WORKDIR "/src/hyBookify.Api"
