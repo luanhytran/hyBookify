@@ -8,7 +8,7 @@ using hyBookify.Domain.Users;
 
 namespace hyBookify.Application.Bookings.ReservedBooking;
 
-internal sealed class ReservedBookingCommandHandler : ICommand<Guid>
+internal sealed class ReservedBookingCommandHandler : ICommandHandler<ReserveBookingCommand, Guid>
 {
     private readonly IUserRepository _userRepository;
     private readonly IApartmentRepository _apartmentRepository;
@@ -33,7 +33,7 @@ internal sealed class ReservedBookingCommandHandler : ICommand<Guid>
         _dateTimeProvider = dateTimeProvider;
     }
     
-    public async Task<Result<Guid>> Handle(ReservedBookingCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(ReserveBookingCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.UserId);
 

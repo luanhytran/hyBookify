@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace hyBookify.Application.Bookings.ReservedBooking;
 
-public class ReservedBookingCommandValidator  : AbstractValidator<ReservedBookingCommand>
+public class ReservedBookingCommandValidator  : AbstractValidator<ReserveBookingCommand>
 {
     public ReservedBookingCommandValidator()
     {

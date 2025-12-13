@@ -31,7 +31,7 @@ namespace hyBookify.Api.Controllers.Bookings
         ReserveBookingRequest request,
         CancellationToken cancellationToken)
         {
-            var command = new ReservedBookingCommand(
+            var command = new ReserveBookingCommand(
                 request.ApartmentId,
                 request.UserId,
                 request.StartDate,
