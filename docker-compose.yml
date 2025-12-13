@@ -11,7 +11,7 @@ services:
       - hybookify-db
 
   hybookify-db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     container_name: hyBookify.Db
     environment:
       - POSTGRES_DB=hybookify
@@ -21,3 +21,16 @@ services:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  
+  hybookify-idp:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: hyBookify.Identity
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files/bookify-realm-export.json:/opt/keycloak/data/import/realm.json
+    ports:
+      - 18080:8080
