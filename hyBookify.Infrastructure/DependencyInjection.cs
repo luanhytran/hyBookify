@@ -6,10 +6,12 @@ using hyBookify.Domain.Abstractions;
 using hyBookify.Domain.Apartments;
 using hyBookify.Domain.Bookings;
 using hyBookify.Domain.Users;
+using hyBookify.Infrastructure.Authentication;
 using hyBookify.Infrastructure.Clock;
 using hyBookify.Infrastructure.Data;
 using hyBookify.Infrastructure.Email;
 using hyBookify.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,14 +26,26 @@ public static class DependencyInjection
         
         services.AddTransient<IEmailService, EmailService>();
         
-        var connectionString =
-            configuration.GetConnectionString("Database") ?? 
-            throw new ArgumentNullException(nameof(configuration));
+        AddPersistence(services,configuration);
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer();
+
+        services.Configure<AuthenticationOptions>(configuration.GetSection("Authentication"));
+
+        services.ConfigureOptions<JwtBearerOptionsSetup>();
+
+        return services;
+    }
+
+    private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionString("Database") ??
+                                  throw new ArgumentNullException(nameof(configuration));
 
         services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
-        });
+            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
 
         services.AddScoped<IUserRepository, UserRepository>();
 
@@ -45,7 +59,5 @@ public static class DependencyInjection
             new SqlConnectionFactory(connectionString));
 
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
-
-        return services;
     }
 }
