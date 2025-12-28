@@ -1,5 +1,6 @@
 ﻿using hyBookify.Application.Abstractions.Authentication;
 using hyBookify.Domain.Users;
+using hyBookify.Infrastructure.Authentication.Models;
 using System.Net.Http.Json;
 
 namespace hyBookify.Infrastructure.Authentication
