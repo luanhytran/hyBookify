@@ -1,4 +1,5 @@
 using Dapper;
+using hyBookify.Application.Abstractions.Authentication;
 using hyBookify.Application.Abstractions.Clock;
 using hyBookify.Application.Abstractions.Data;
 using hyBookify.Application.Abstractions.Email;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace hyBookify.Infrastructure;
 
@@ -23,10 +25,10 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
-        
+
         services.AddTransient<IEmailService, EmailService>();
-        
-        AddPersistence(services,configuration);
+
+        AddPersistence(services, configuration);
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -35,6 +37,18 @@ public static class DependencyInjection
         services.Configure<AuthenticationOptions>(configuration.GetSection("Authentication"));
 
         services.ConfigureOptions<JwtBearerOptionsSetup>();
+
+        services.Configure<KeycloakOptions>(configuration.GetSection("Keycloak"));
+
+        services.AddTransient<AdminAuthorizationDelegatingHandler>();
+
+        services.AddHttpClient<IAuthenticationService, AuthenticationService>((serviceProvider, httpClient) =>
+            {
+                KeycloakOptions keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+
+                httpClient.BaseAddress = new Uri(keycloakOptions.AdminUrl);
+            })
+            .AddHttpMessageHandler<AdminAuthorizationDelegatingHandler>();
 
         return services;
     }
