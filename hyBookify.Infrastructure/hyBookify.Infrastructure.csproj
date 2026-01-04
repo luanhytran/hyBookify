@@ -18,4 +18,8 @@
       <ProjectReference Include="..\hyBookify.Application\hyBookify.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Persistence\Data\Migrations\" />
+    </ItemGroup>
+
 </Project>
