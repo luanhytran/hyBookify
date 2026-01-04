@@ -2,21 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using hyBookify.Infrastructure;
 
 #nullable disable
 
-namespace hyBookify.Infrastructure.Migrations
+namespace hyBookify.Infrastructure.Persistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251208144331_Create_Database")]
-    partial class Create_Database
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,45 +21,6 @@ namespace hyBookify.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_role");
-
-                    b.ToTable("role", (string)null);
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer")
-                        .HasColumnName("roles_id");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("users_id");
-
-                    b.HasKey("RolesId", "UsersId")
-                        .HasName("pk_role_user");
-
-                    b.HasIndex("UsersId")
-                        .HasDatabaseName("ix_role_user_users_id");
-
-                    b.ToTable("role_user", (string)null);
-                });
 
             modelBuilder.Entity("hyBookify.Domain.Apartments.Apartment", b =>
                 {
@@ -203,33 +161,6 @@ namespace hyBookify.Infrastructure.Migrations
                     b.ToTable("reviews", (string)null);
                 });
 
-            modelBuilder.Entity("hyBookify.Domain.Users.Permission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_permission");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_permission_role_id");
-
-                    b.ToTable("permission", (string)null);
-                });
-
             modelBuilder.Entity("hyBookify.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -249,11 +180,6 @@ namespace hyBookify.Infrastructure.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("first_name");
 
-                    b.Property<string>("IdentityId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("identity_id");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -268,23 +194,6 @@ namespace hyBookify.Infrastructure.Migrations
                         .HasDatabaseName("ix_users_email");
 
                     b.ToTable("users", (string)null);
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_role_user_role_roles_id");
-
-                    b.HasOne("hyBookify.Domain.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_role_user_user_users_id");
                 });
 
             modelBuilder.Entity("hyBookify.Domain.Apartments.Apartment", b =>
@@ -560,19 +469,6 @@ namespace hyBookify.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_reviews_user_user_id");
-                });
-
-            modelBuilder.Entity("hyBookify.Domain.Users.Permission", b =>
-                {
-                    b.HasOne("Role", null)
-                        .WithMany("Permissions")
-                        .HasForeignKey("RoleId")
-                        .HasConstraintName("fk_permission_role_role_id");
-                });
-
-            modelBuilder.Entity("Role", b =>
-                {
-                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }

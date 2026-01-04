@@ -11,11 +11,6 @@ namespace hyBookify.Infrastructure.Repositories
 
         public override void Add(User user)
         {
-            foreach (Role role in user.Roles)
-            {
-                DbContext.Attach(role);
-            }
-
             DbContext.Add(user);
         }
     }
