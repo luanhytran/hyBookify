@@ -1,4 +1,5 @@
-﻿using hyBookify.Application.Users.RegisterUser;
+﻿using hyBookify.Application.Users.LogInUser;
+using hyBookify.Application.Users.RegisterUser;
 using hyBookify.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,8 +21,8 @@ namespace hyBookify.Api.Controllers.Users
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(
-        RegisterUserRequest request,
-        CancellationToken cancellationToken)
+            RegisterUserRequest request,
+            CancellationToken cancellationToken)
         {
             var command = new RegisterUserCommand(
                 request.Email,
@@ -34,6 +35,24 @@ namespace hyBookify.Api.Controllers.Users
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> LogIn(
+            LogInUserRequest request,
+            CancellationToken cancellationToken)
+        {
+            var command = new LogInUserCommand(request.Email, request.Password);
+
+            Result<AccessTokenResponse> result = await _sender.Send(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return Unauthorized(result.Error);
             }
 
             return Ok(result.Value);
