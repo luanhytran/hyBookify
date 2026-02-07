@@ -1,4 +1,5 @@
-﻿using hyBookify.Application.Users.LogInUser;
+﻿using hyBookify.Application.Users.GetLoggedInUser;
+using hyBookify.Application.Users.LogInUser;
 using hyBookify.Application.Users.RegisterUser;
 using hyBookify.Domain.Abstractions;
 using MediatR;
@@ -16,6 +17,17 @@ namespace hyBookify.Api.Controllers.Users
         public UsersController(ISender sender)
         {
             _sender = sender;
+        }
+        
+        [HttpGet("me")]
+        [Authorize(Roles = Roles.Registered)]
+        public async Task<IActionResult> GetLoggedInUser(CancellationToken cancellationToken)
+        {
+            var query = new GetLoggedInUserQuery();
+
+            var result = await _sender.Send(query, cancellationToken);
+
+            return Ok(result.Value);
         }
 
         [AllowAnonymous]

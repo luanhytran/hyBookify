@@ -8,15 +8,21 @@ using hyBookify.Domain.Apartments;
 using hyBookify.Domain.Bookings;
 using hyBookify.Domain.Users;
 using hyBookify.Infrastructure.Authentication;
+using hyBookify.Infrastructure.Authorization;
 using hyBookify.Infrastructure.Clock;
 using hyBookify.Infrastructure.Data;
 using hyBookify.Infrastructure.Email;
 using hyBookify.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using AuthenticationOptions = hyBookify.Infrastructure.Authentication.AuthenticationOptions;
+using AuthenticationService = hyBookify.Infrastructure.Authentication.AuthenticationService;
+using IAuthenticationService = hyBookify.Application.Abstractions.Authentication.IAuthenticationService;
 
 namespace hyBookify.Infrastructure;
 
@@ -31,6 +37,8 @@ public static class DependencyInjection
         AddPersistence(services, configuration);
 
         AddAuthentication(services, configuration);
+        
+        AddAuthorization(services);
 
         return services;
     }
@@ -63,6 +71,13 @@ public static class DependencyInjection
 
             httpClient.BaseAddress = new Uri(keycloakOptions.TokenUrl);
         });
+    }
+    
+    private static void AddAuthorization(IServiceCollection services)
+    {
+        services.AddScoped<AuthorizationService>();
+
+        services.AddTransient<IClaimsTransformation, CustomClaimsTransformation>();
     }
 
     private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
