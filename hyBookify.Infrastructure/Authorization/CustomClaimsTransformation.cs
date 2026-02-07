@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using hyBookify.Domain.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
