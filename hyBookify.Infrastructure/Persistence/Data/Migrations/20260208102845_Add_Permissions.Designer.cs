@@ -12,7 +12,7 @@ using hyBookify.Infrastructure;
 namespace hyBookify.Infrastructure.Persistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260208080239_Add_Permissions")]
+    [Migration("20260208102845_Add_Permissions")]
     partial class Add_Permissions
     {
         /// <inheritdoc />
@@ -197,15 +197,8 @@ namespace hyBookify.Infrastructure.Persistence.Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
-
                     b.HasKey("Id")
                         .HasName("pk_permissions");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_permissions_role_id");
 
                     b.ToTable("permissions", (string)null);
 
@@ -256,6 +249,9 @@ namespace hyBookify.Infrastructure.Persistence.Data.Migrations
 
                     b.HasKey("RoleId", "PermissionId")
                         .HasName("pk_role_permissions");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permissions_permission_id");
 
                     b.ToTable("role_permissions", (string)null);
 
@@ -603,17 +599,21 @@ namespace hyBookify.Infrastructure.Persistence.Data.Migrations
                         .HasConstraintName("fk_reviews_user_user_id");
                 });
 
-            modelBuilder.Entity("hyBookify.Domain.Users.Permission", b =>
+            modelBuilder.Entity("hyBookify.Domain.Users.RolePermission", b =>
                 {
-                    b.HasOne("hyBookify.Domain.Users.Role", null)
-                        .WithMany("Permissions")
-                        .HasForeignKey("RoleId")
-                        .HasConstraintName("fk_permissions_role_role_id");
-                });
+                    b.HasOne("hyBookify.Domain.Users.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
 
-            modelBuilder.Entity("hyBookify.Domain.Users.Role", b =>
-                {
-                    b.Navigation("Permissions");
+                    b.HasOne("hyBookify.Domain.Users.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
                 });
 #pragma warning restore 612, 618
         }
