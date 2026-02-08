@@ -2,6 +2,7 @@
 using hyBookify.Application.Users.LogInUser;
 using hyBookify.Application.Users.RegisterUser;
 using hyBookify.Domain.Abstractions;
+using hyBookify.Infrastructure.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace hyBookify.Api.Controllers.Users
         }
         
         [HttpGet("me")]
-        [Authorize(Roles = Roles.Registered)]
+        [HasPermission(Permissions.UsersRead)]
         public async Task<IActionResult> GetLoggedInUser(CancellationToken cancellationToken)
         {
             var query = new GetLoggedInUserQuery();
