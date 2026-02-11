@@ -1,18 +1,21 @@
-using System.Data;
 using Dapper;
+using hyBookify.Application.Abstractions.Authentication;
 using hyBookify.Application.Abstractions.Data;
 using hyBookify.Application.Abstractions.Messaging;
 using hyBookify.Domain.Abstractions;
+using hyBookify.Domain.Bookings;
 
 namespace hyBookify.Application.Bookings.GetBooking;
 
 internal sealed class GetBookingQueryHandler : IQueryHandler<GetBookingQuery, BookingResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IUserContext _userContext;
 
-    public GetBookingQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetBookingQueryHandler(ISqlConnectionFactory sqlConnectionFactory, IUserContext userContext)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _userContext = userContext;
     }
 
     public async Task<Result<BookingResponse>> Handle(GetBookingQuery request, CancellationToken cancellationToken)
@@ -46,6 +49,11 @@ internal sealed class GetBookingQueryHandler : IQueryHandler<GetBookingQuery, Bo
             {
                 request.BookingId
             });
+
+        if (booking is null || booking.UserId != _userContext.UserId)
+        {
+            return Result.Failure<BookingResponse>(BookingErrors.NotFound);
+        }
 
         return booking;
     }

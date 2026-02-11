@@ -1,10 +1,12 @@
 ﻿using hyBookify.Application.Bookings.GetBooking;
 using hyBookify.Application.Bookings.ReservedBooking;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hyBookify.Api.Controllers.Bookings
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BookingsController : ControllerBase
