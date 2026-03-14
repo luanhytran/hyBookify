@@ -1,5 +1,6 @@
 using Dapper;
 using hyBookify.Application.Abstractions.Authentication;
+using hyBookify.Application.Abstractions.Caching;
 using hyBookify.Application.Abstractions.Clock;
 using hyBookify.Application.Abstractions.Data;
 using hyBookify.Application.Abstractions.Email;
@@ -9,6 +10,7 @@ using hyBookify.Domain.Bookings;
 using hyBookify.Domain.Users;
 using hyBookify.Infrastructure.Authentication;
 using hyBookify.Infrastructure.Authorization;
+using hyBookify.Infrastructure.Caching;
 using hyBookify.Infrastructure.Clock;
 using hyBookify.Infrastructure.Data;
 using hyBookify.Infrastructure.Email;
@@ -39,6 +41,8 @@ public static class DependencyInjection
         AddAuthentication(services, configuration);
         
         AddAuthorization(services);
+
+        AddCaching(services, configuration);
 
         return services;
     }
@@ -108,5 +112,15 @@ public static class DependencyInjection
             new SqlConnectionFactory(connectionString));
 
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+    }
+    
+    private static void AddCaching(IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionString("Cache") ??
+                                  throw new ArgumentNullException(nameof(configuration));
+        // This will override Microsoft in-memory cache
+        services.AddStackExchangeRedisCache(options => options.Configuration = connectionString);
+
+        services.AddSingleton<ICacheService, CacheService>();
     }
 }
