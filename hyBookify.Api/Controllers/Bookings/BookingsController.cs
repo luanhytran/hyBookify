@@ -1,4 +1,5 @@
-﻿using hyBookify.Application.Bookings.GetBooking;
+﻿using Asp.Versioning;
+using hyBookify.Application.Bookings.GetBooking;
 using hyBookify.Application.Bookings.ReservedBooking;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,8 @@ namespace hyBookify.Api.Controllers.Bookings
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion(ApiVersions.V1)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class BookingsController : ControllerBase
     {
         private readonly ISender _sender;

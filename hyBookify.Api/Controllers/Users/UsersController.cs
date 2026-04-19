@@ -1,4 +1,5 @@
-﻿using hyBookify.Application.Users.GetLoggedInUser;
+﻿using Asp.Versioning;
+using hyBookify.Application.Users.GetLoggedInUser;
 using hyBookify.Application.Users.LogInUser;
 using hyBookify.Application.Users.RegisterUser;
 using hyBookify.Domain.Abstractions;
@@ -10,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace hyBookify.Api.Controllers.Users
 {
     [ApiController]
-    [Route("api/users")]
+    [ApiVersion(ApiVersions.V1)]
+    [Route("api/v{version:apiVersion}/users")]
     public class UsersController : ControllerBase
     {
         private readonly ISender _sender;

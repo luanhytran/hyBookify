@@ -1,4 +1,5 @@
-﻿using hyBookify.Application.Apartments.SearchApartments;
+﻿using Asp.Versioning;
+using hyBookify.Application.Apartments.SearchApartments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,8 @@ namespace hyBookify.Api.Controllers.Apartments
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion(ApiVersions.V1)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ApartmentsController : ControllerBase
     {
         private readonly ISender _sender;
