@@ -47,6 +47,7 @@ internal sealed class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.HasOne<User>()
             .WithMany()
-            .HasForeignKey(booking => booking.UserId);
+            .HasForeignKey(booking => booking.UserId)
+            .HasConstraintName("fk_bookings_user_user_id");
     }
 }

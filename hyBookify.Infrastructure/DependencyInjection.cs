@@ -8,6 +8,7 @@ using hyBookify.Application.Abstractions.Email;
 using hyBookify.Domain.Abstractions;
 using hyBookify.Domain.Apartments;
 using hyBookify.Domain.Bookings;
+using hyBookify.Domain.Reviews;
 using hyBookify.Domain.Users;
 using hyBookify.Infrastructure.Authentication;
 using hyBookify.Infrastructure.Authorization;
@@ -111,7 +112,11 @@ public static class DependencyInjection
 
         services.AddScoped<IBookingRepository, BookingRepository>();
 
+        services.AddScoped<IReviewRepository, ReviewRepository>();
+        
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+        
+        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddSingleton<ISqlConnectionFactory>(_ =>
             new SqlConnectionFactory(connectionString));

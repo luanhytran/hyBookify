@@ -32,7 +32,8 @@ namespace hyBookify.Infrastructure.Configurations
 
             builder.HasOne<User>()
                 .WithMany()
-                .HasForeignKey(review => review.UserId);
+                .HasForeignKey(review => review.UserId)
+                .HasConstraintName("fk_reviews_user_user_id");
         }
     }
 }
